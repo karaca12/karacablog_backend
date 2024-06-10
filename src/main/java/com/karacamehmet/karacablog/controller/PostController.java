@@ -39,7 +39,8 @@ public class PostController {
     }
 
     @PutMapping("/{uniqueNum}")
-    public ResponseEntity<UpdatePostResponse> updatePostByUniqueNum(@PathVariable String uniqueNum, @RequestBody @Valid UpdatePostRequest request) {
+    public ResponseEntity<UpdatePostResponse> updatePostByUniqueNum(@PathVariable String uniqueNum,
+                                                                    @RequestBody @Valid UpdatePostRequest request) {
         return new ResponseEntity<>(postService.updatePostByUniqueNum(uniqueNum, request), HttpStatus.OK);
     }
 

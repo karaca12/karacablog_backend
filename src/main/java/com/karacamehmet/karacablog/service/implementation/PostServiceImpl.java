@@ -12,9 +12,11 @@ import com.karacamehmet.karacablog.repository.PostRepository;
 import com.karacamehmet.karacablog.service.abstraction.PostService;
 import com.karacamehmet.karacablog.service.abstraction.TagService;
 import com.karacamehmet.karacablog.service.abstraction.UserService;
+import com.karacamehmet.karacablog.service.event.PostDeletedEvent;
 import com.karacamehmet.karacablog.service.mapper.PostMapper;
 import com.karacamehmet.karacablog.service.rules.PostBusinessRules;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -31,7 +33,7 @@ public class PostServiceImpl implements PostService {
     private final UserService userService;
     private final TagService tagService;
     private final PostBusinessRules businessRules;
-
+    private final ApplicationEventPublisher eventPublisher;
 
     @Override
     public CreatePostResponse createPost(CreatePostRequest request) {
@@ -47,7 +49,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public List<GetAllPostsResponse> getAllPosts(PageInfo pageInfo) {
         Pageable pageable = PageRequest.of(pageInfo.getPage(), pageInfo.getSize());
-        List<Post> posts = postRepository.findByIsDeletedFalse(pageable);
+        List<Post> posts = postRepository.findByIsDeletedFalseOrderByUpdatedAtDesc(pageable);
         return PostMapper.INSTANCE.getGetAllPostsResponsesFromPosts(posts);
     }
 
@@ -66,13 +68,18 @@ public class PostServiceImpl implements PostService {
         return PostMapper.INSTANCE.getUpdatePostResponseFromPost(postRepository.save(post));
     }
 
-    //todo: this should delete all the comments on the post
     @Override
     public Void deletePostByUniqueNum(String uniqueNum) {
         Post post = businessRules.getPostFromOptional(postRepository.findByUniqueNumAndIsDeletedFalse(uniqueNum));
         post.setDeleted(true);
         post.setDeletedAt(LocalDateTime.now());
+        eventPublisher.publishEvent(new PostDeletedEvent(this, post.getComments()));
         postRepository.save(post);
         return null;
+    }
+
+    @Override
+    public Post findByUniqueNum(String uniqueNum) {
+        return businessRules.getPostFromOptional(postRepository.findByUniqueNumAndIsDeletedFalse(uniqueNum));
     }
 }

@@ -10,6 +10,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Comment extends BaseEntity {
+    @Column(nullable = false, length = 9)
+    private String uniqueNum;
+
     @Column(nullable = false, length = 1000)
     private String content;
 

@@ -7,6 +7,7 @@ import com.karacamehmet.karacablog.dto.response.CreatePostResponse;
 import com.karacamehmet.karacablog.dto.response.GetAllPostsResponse;
 import com.karacamehmet.karacablog.dto.response.GetPostResponse;
 import com.karacamehmet.karacablog.dto.response.UpdatePostResponse;
+import com.karacamehmet.karacablog.model.Post;
 
 import java.util.List;
 
@@ -21,4 +22,6 @@ public interface PostService {
     UpdatePostResponse updatePostByUniqueNum(String uniqueNum, UpdatePostRequest request);
 
     Void deletePostByUniqueNum(String uniqueNum);
+
+    Post findByUniqueNum(String uniqueNum);
 }

@@ -6,6 +6,7 @@ public class Messages {
         public static final String USER_ALREADY_EXISTS = "userAlreadyExists";
         public static final String WRONG_USERNAME_OR_PASSWORD = "wrongUsernameOrPassword";
         public static final String NO_POST_FOUND = "noPostFound";
+        public static final String NO_COMMENT_FOUND = "noCommentFound";
     }
 
     public static class ValidationErrors {
