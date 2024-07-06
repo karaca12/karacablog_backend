@@ -5,11 +5,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class RegisterResponse {
-    private String username;
-    private String jwtToken;
+public class GetAllPostsListResponse {
+    private List<GetAllPostsResponse> posts;
+    private long totalPages;
 }

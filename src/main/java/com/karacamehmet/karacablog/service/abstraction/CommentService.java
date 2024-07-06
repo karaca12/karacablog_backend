@@ -3,10 +3,7 @@ package com.karacamehmet.karacablog.service.abstraction;
 import com.karacamehmet.karacablog.core.paging.PageInfo;
 import com.karacamehmet.karacablog.dto.request.CreateCommentRequest;
 import com.karacamehmet.karacablog.dto.request.UpdateCommentRequest;
-import com.karacamehmet.karacablog.dto.response.CreateCommentResponse;
-import com.karacamehmet.karacablog.dto.response.GetAllCommentsOfPostResponse;
-import com.karacamehmet.karacablog.dto.response.GetCommentResponse;
-import com.karacamehmet.karacablog.dto.response.UpdateCommentResponse;
+import com.karacamehmet.karacablog.dto.response.*;
 import com.karacamehmet.karacablog.model.Comment;
 
 import java.util.List;
@@ -14,7 +11,7 @@ import java.util.List;
 public interface CommentService {
     CreateCommentResponse createCommentToPost(String postUniqueNum, CreateCommentRequest request);
 
-    List<GetAllCommentsOfPostResponse> getAllCommentsOfPostByPostUniqueNum(PageInfo pageInfo, String postUniqueNum);
+    GetAllCommentsOfPostListResponse getAllCommentsOfPostByPostUniqueNum(PageInfo pageInfo, String postUniqueNum);
 
     GetCommentResponse getCommentByUniqueNum(String uniqueNum);
 

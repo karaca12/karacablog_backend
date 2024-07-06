@@ -1,10 +1,7 @@
 package com.karacamehmet.karacablog.service.mapper;
 
 import com.karacamehmet.karacablog.dto.request.CreatePostRequest;
-import com.karacamehmet.karacablog.dto.response.CreatePostResponse;
-import com.karacamehmet.karacablog.dto.response.GetAllPostsResponse;
-import com.karacamehmet.karacablog.dto.response.GetPostResponse;
-import com.karacamehmet.karacablog.dto.response.UpdatePostResponse;
+import com.karacamehmet.karacablog.dto.response.*;
 import com.karacamehmet.karacablog.model.Post;
 import com.karacamehmet.karacablog.model.Tag;
 import org.mapstruct.Mapper;
@@ -44,4 +41,9 @@ public interface PostMapper {
 
     @Mapping(target = "author", source = "user.username")
     UpdatePostResponse getUpdatePostResponseFromPost(Post post);
+
+    @Mapping(target = "author", source = "user.username")
+    SearchPostResponse getSearchPostResponseFromPost(Post post);
+
+    List<SearchPostResponse> getSearchPostResponsesFromPosts(List<Post> posts);
 }

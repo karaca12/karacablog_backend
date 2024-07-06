@@ -3,10 +3,7 @@ package com.karacamehmet.karacablog.controller;
 import com.karacamehmet.karacablog.core.paging.PageInfo;
 import com.karacamehmet.karacablog.dto.request.CreatePostRequest;
 import com.karacamehmet.karacablog.dto.request.UpdatePostRequest;
-import com.karacamehmet.karacablog.dto.response.CreatePostResponse;
-import com.karacamehmet.karacablog.dto.response.GetAllPostsResponse;
-import com.karacamehmet.karacablog.dto.response.GetPostResponse;
-import com.karacamehmet.karacablog.dto.response.UpdatePostResponse;
+import com.karacamehmet.karacablog.dto.response.*;
 import com.karacamehmet.karacablog.service.abstraction.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +25,7 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<List<GetAllPostsResponse>> getAllPosts(@RequestParam int page, @RequestParam int size) {
+    public ResponseEntity<GetAllPostsListResponse> getAllPosts(@RequestParam int page, @RequestParam int size) {
         PageInfo pageInfo = new PageInfo(page, size);
         return new ResponseEntity<>(postService.getAllPosts(pageInfo), HttpStatus.OK);
     }
@@ -48,4 +45,12 @@ public class PostController {
     public ResponseEntity<Void> deletePostByUniqueNum(@PathVariable String uniqueNum) {
         return new ResponseEntity<>(postService.deletePostByUniqueNum(uniqueNum), HttpStatus.NO_CONTENT);
     }
+
+    @PostMapping("/search/{keyword}")
+    public ResponseEntity<List<SearchPostResponse>> searchByTitleOrContent(@PathVariable String keyword,
+                                                                           @RequestParam int page, @RequestParam int size){
+        PageInfo pageInfo = new PageInfo(page, size);
+        return new ResponseEntity<>(postService.searchByTitleOrContent(keyword,pageInfo),HttpStatus.OK);
+    }
+
 }

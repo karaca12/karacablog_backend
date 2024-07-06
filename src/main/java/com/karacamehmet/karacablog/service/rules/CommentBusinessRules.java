@@ -44,4 +44,14 @@ public class CommentBusinessRules {
         return optionalComment.orElseThrow(() -> new BusinessException(messageService.getMessage(Messages.BusinessErrors.NO_COMMENT_FOUND)));
 
     }
+
+    public long checkIfCommentsCountIsMultipleOfPageSizeAndReturnPageCount(int pageSize,String postUniqueNum) {
+        long commentCount = commentRepository.countByIsDeletedFalseAndPost_UniqueNum(postUniqueNum);
+        if (commentCount%pageSize == 0) {
+            return commentCount/pageSize;
+        }else {
+            return commentCount/pageSize+1;
+        }
+
+    }
 }

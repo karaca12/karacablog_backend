@@ -3,10 +3,7 @@ package com.karacamehmet.karacablog.controller;
 import com.karacamehmet.karacablog.core.paging.PageInfo;
 import com.karacamehmet.karacablog.dto.request.CreateCommentRequest;
 import com.karacamehmet.karacablog.dto.request.UpdateCommentRequest;
-import com.karacamehmet.karacablog.dto.response.CreateCommentResponse;
-import com.karacamehmet.karacablog.dto.response.GetAllCommentsOfPostResponse;
-import com.karacamehmet.karacablog.dto.response.GetCommentResponse;
-import com.karacamehmet.karacablog.dto.response.UpdateCommentResponse;
+import com.karacamehmet.karacablog.dto.response.*;
 import com.karacamehmet.karacablog.service.abstraction.CommentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +26,7 @@ public class CommentController {
     }
 
     @GetMapping("/post/{postUniqueNum}")
-    public ResponseEntity<List<GetAllCommentsOfPostResponse>> getAllCommentsOfPostByPostUniqueNum(
+    public ResponseEntity<GetAllCommentsOfPostListResponse> getAllCommentsOfPostByPostUniqueNum(
             @RequestParam int page, @RequestParam int size, @PathVariable String postUniqueNum) {
         PageInfo pageInfo = new PageInfo(page, size);
         return new ResponseEntity<>(commentService.getAllCommentsOfPostByPostUniqueNum(pageInfo, postUniqueNum), HttpStatus.OK);

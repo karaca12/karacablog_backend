@@ -13,4 +13,6 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
     List<Comment> findByPost_UniqueNumAndIsDeletedFalseOrderByUpdatedAtDesc(String uniqueNum, Pageable pageable);
 
     Optional<Comment> findByUniqueNumAndIsDeletedFalse(String uniqueNum);
+
+    long countByIsDeletedFalseAndPost_UniqueNum(String uniqueNum);
 }

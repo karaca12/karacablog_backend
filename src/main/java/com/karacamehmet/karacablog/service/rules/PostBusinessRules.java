@@ -43,4 +43,13 @@ public class PostBusinessRules {
         return optionalPost.orElseThrow(() -> new BusinessException(messageService.getMessage(Messages.BusinessErrors.NO_POST_FOUND)));
 
     }
+
+    public long checkIfPostCountIsMultipleOfPageSizeAndReturnPageCount(int pageSize) {
+        long postCount = postRepository.countByIsDeletedFalse();
+        if (postCount%pageSize == 0) {
+            return postCount/pageSize;
+        }else {
+            return postCount/pageSize+1;
+        }
+    }
 }

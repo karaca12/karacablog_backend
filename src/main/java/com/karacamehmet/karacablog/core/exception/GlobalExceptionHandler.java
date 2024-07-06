@@ -1,10 +1,9 @@
 package com.karacamehmet.karacablog.core.exception;
 
-import com.karacamehmet.karacablog.core.exception.detail.BadCredentialsProblemDetails;
-import com.karacamehmet.karacablog.core.exception.detail.BusinessProblemDetails;
-import com.karacamehmet.karacablog.core.exception.detail.InternalAuthenticationProblemDetails;
-import com.karacamehmet.karacablog.core.exception.detail.ValidationProblemDetails;
+import com.karacamehmet.karacablog.core.exception.detail.*;
 import com.karacamehmet.karacablog.core.exception.type.BusinessException;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.MalformedJwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
@@ -46,6 +45,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler({BadCredentialsException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public BadCredentialsProblemDetails handleBadCredentialsException(BadCredentialsException exception) {
         BadCredentialsProblemDetails problemDetails = new BadCredentialsProblemDetails();
         problemDetails.setDetail(exception.getMessage());
@@ -53,11 +53,13 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler({InternalAuthenticationServiceException.class})
-    public InternalAuthenticationProblemDetails InternalAuthenticationServiceException(InternalAuthenticationServiceException exception) {
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public InternalAuthenticationProblemDetails handleInternalAuthenticationServiceException(InternalAuthenticationServiceException exception) {
         InternalAuthenticationProblemDetails problemDetails = new InternalAuthenticationProblemDetails();
         problemDetails.setDetail(exception.getMessage());
         return problemDetails;
     }
+
     //unlock later
     /*@ExceptionHandler({Exception.class})
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

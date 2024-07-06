@@ -3,10 +3,7 @@ package com.karacamehmet.karacablog.service.implementation;
 import com.karacamehmet.karacablog.core.paging.PageInfo;
 import com.karacamehmet.karacablog.dto.request.CreatePostRequest;
 import com.karacamehmet.karacablog.dto.request.UpdatePostRequest;
-import com.karacamehmet.karacablog.dto.response.CreatePostResponse;
-import com.karacamehmet.karacablog.dto.response.GetAllPostsResponse;
-import com.karacamehmet.karacablog.dto.response.GetPostResponse;
-import com.karacamehmet.karacablog.dto.response.UpdatePostResponse;
+import com.karacamehmet.karacablog.dto.response.*;
 import com.karacamehmet.karacablog.model.Post;
 import com.karacamehmet.karacablog.repository.PostRepository;
 import com.karacamehmet.karacablog.service.abstraction.PostService;
@@ -47,10 +44,14 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<GetAllPostsResponse> getAllPosts(PageInfo pageInfo) {
+    public GetAllPostsListResponse getAllPosts(PageInfo pageInfo) {
         Pageable pageable = PageRequest.of(pageInfo.getPage(), pageInfo.getSize());
         List<Post> posts = postRepository.findByIsDeletedFalseOrderByUpdatedAtDesc(pageable);
-        return PostMapper.INSTANCE.getGetAllPostsResponsesFromPosts(posts);
+        GetAllPostsListResponse response = new GetAllPostsListResponse();
+        response.setPosts(PostMapper.INSTANCE.getGetAllPostsResponsesFromPosts(posts));
+        long pageCount = businessRules.checkIfPostCountIsMultipleOfPageSizeAndReturnPageCount(pageInfo.getSize());
+        response.setTotalPages(pageCount);
+        return response;
     }
 
     @Override
@@ -81,5 +82,12 @@ public class PostServiceImpl implements PostService {
     @Override
     public Post findByUniqueNum(String uniqueNum) {
         return businessRules.getPostFromOptional(postRepository.findByUniqueNumAndIsDeletedFalse(uniqueNum));
+    }
+
+    @Override
+    public List<SearchPostResponse> searchByTitleOrContent(String keyword, PageInfo pageInfo) {
+        Pageable pageable = PageRequest.of(pageInfo.getPage(), pageInfo.getSize());
+        List<Post> posts = postRepository.searchByTitleOrContent(keyword,pageable);
+        return PostMapper.INSTANCE.getSearchPostResponsesFromPosts(posts);
     }
 }

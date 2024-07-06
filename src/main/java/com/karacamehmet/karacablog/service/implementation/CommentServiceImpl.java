@@ -3,10 +3,7 @@ package com.karacamehmet.karacablog.service.implementation;
 import com.karacamehmet.karacablog.core.paging.PageInfo;
 import com.karacamehmet.karacablog.dto.request.CreateCommentRequest;
 import com.karacamehmet.karacablog.dto.request.UpdateCommentRequest;
-import com.karacamehmet.karacablog.dto.response.CreateCommentResponse;
-import com.karacamehmet.karacablog.dto.response.GetAllCommentsOfPostResponse;
-import com.karacamehmet.karacablog.dto.response.GetCommentResponse;
-import com.karacamehmet.karacablog.dto.response.UpdateCommentResponse;
+import com.karacamehmet.karacablog.dto.response.*;
 import com.karacamehmet.karacablog.model.Comment;
 import com.karacamehmet.karacablog.repository.CommentRepository;
 import com.karacamehmet.karacablog.service.abstraction.CommentService;
@@ -44,11 +41,15 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<GetAllCommentsOfPostResponse> getAllCommentsOfPostByPostUniqueNum(PageInfo pageInfo, String postUniqueNum) {
+    public GetAllCommentsOfPostListResponse getAllCommentsOfPostByPostUniqueNum(PageInfo pageInfo, String postUniqueNum) {
         Pageable pageable = PageRequest.of(pageInfo.getPage(), pageInfo.getSize());
         postService.findByUniqueNum(postUniqueNum);
         List<Comment> comments = commentRepository.findByPost_UniqueNumAndIsDeletedFalseOrderByUpdatedAtDesc(postUniqueNum, pageable);
-        return CommentMapper.INSTANCE.getGetAllCommentsOfPostResponsesFromComments(comments);
+        GetAllCommentsOfPostListResponse response = new GetAllCommentsOfPostListResponse();
+        response.setComments(CommentMapper.INSTANCE.getGetAllCommentsOfPostResponsesFromComments(comments));
+        long pageCount = businessRules.checkIfCommentsCountIsMultipleOfPageSizeAndReturnPageCount(pageInfo.getSize(),postUniqueNum);
+        response.setTotalPages(pageCount);
+        return response;
     }
 
     @Override
