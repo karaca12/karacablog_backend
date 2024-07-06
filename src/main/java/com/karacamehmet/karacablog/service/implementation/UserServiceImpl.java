@@ -1,6 +1,7 @@
 package com.karacamehmet.karacablog.service.implementation;
 
 import com.karacamehmet.karacablog.dto.request.RegisterRequest;
+import com.karacamehmet.karacablog.dto.response.GetUserResponse;
 import com.karacamehmet.karacablog.model.User;
 import com.karacamehmet.karacablog.repository.UserRepository;
 import com.karacamehmet.karacablog.service.abstraction.RoleService;
@@ -40,5 +41,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findUserByUsername(String username) {
         return userBusinessRules.getUserFromOptional(userRepository.findByUsername(username));
+    }
+
+    @Override
+    public GetUserResponse getUserByUserName(String userName) {
+        User user = findUserByUsername(userName);
+        return UserMapper.INSTANCE.getUserResponseFromUser(user);
     }
 }
