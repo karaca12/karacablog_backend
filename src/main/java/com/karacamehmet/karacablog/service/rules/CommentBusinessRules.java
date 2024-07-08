@@ -54,4 +54,10 @@ public class CommentBusinessRules {
         }
 
     }
+
+    public void checkIfJWTUsernameMatchesRequestAuthor(String username, String author) {
+        if (!username.equals(author)) {
+            throw new BusinessException(messageService.getMessage(Messages.BusinessErrors.USERS_DONT_MATCH));
+        }
+    }
 }

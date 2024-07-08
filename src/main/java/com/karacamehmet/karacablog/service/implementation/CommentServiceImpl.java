@@ -16,6 +16,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +35,8 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public CreateCommentResponse createCommentToPost(String postUniqueNum, CreateCommentRequest request) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        businessRules.checkIfJWTUsernameMatchesRequestAuthor(authentication.getName(), request.getAuthor());
         Comment comment = CommentMapper.INSTANCE.getCommentFromCreateCommentRequest(request);
         comment.setUniqueNum(businessRules.generateCommentUniqueNum());
         comment.setUser(userService.findUserByUsername(request.getAuthor()));
@@ -44,7 +48,7 @@ public class CommentServiceImpl implements CommentService {
     public GetAllCommentsOfPostListResponse getAllCommentsOfPostByPostUniqueNum(PageInfo pageInfo, String postUniqueNum) {
         Pageable pageable = PageRequest.of(pageInfo.getPage(), pageInfo.getSize());
         postService.findByUniqueNum(postUniqueNum);
-        List<Comment> comments = commentRepository.findByPost_UniqueNumAndIsDeletedFalseOrderByUpdatedAtDesc(postUniqueNum, pageable);
+        List<Comment> comments = commentRepository.findByPost_UniqueNumAndIsDeletedFalseOrderByCreatedAtDesc(postUniqueNum, pageable);
         GetAllCommentsOfPostListResponse response = new GetAllCommentsOfPostListResponse();
         response.setComments(CommentMapper.INSTANCE.getGetAllCommentsOfPostResponsesFromComments(comments));
         long pageCount = businessRules.checkIfCommentsCountIsMultipleOfPageSizeAndReturnPageCount(pageInfo.getSize(),postUniqueNum);
@@ -62,6 +66,8 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public UpdateCommentResponse updateCommentByUniqueNum(String uniqueNum, UpdateCommentRequest request) {
         Comment comment = businessRules.getCommentFromOptional(commentRepository.findByUniqueNumAndIsDeletedFalse(uniqueNum));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        businessRules.checkIfJWTUsernameMatchesRequestAuthor(authentication.getName(), comment.getUser().getUsername());
         comment.setContent(request.getContent());
         return CommentMapper.INSTANCE.getUpdateCommentResponseFromComment(commentRepository.save(comment));
     }
@@ -69,6 +75,8 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Void deleteCommentByUniqueNum(String uniqueNum) {
         Comment comment = businessRules.getCommentFromOptional(commentRepository.findByUniqueNumAndIsDeletedFalse(uniqueNum));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        businessRules.checkIfJWTUsernameMatchesRequestAuthor(authentication.getName(), comment.getUser().getUsername());
         comment.setDeleted(true);
         comment.setDeletedAt(LocalDateTime.now());
         commentRepository.save(comment);

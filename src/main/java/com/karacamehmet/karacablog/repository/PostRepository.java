@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface PostRepository extends JpaRepository<Post, Integer> {
     boolean existsByUniqueNum(String uniqueNum);
 
-    List<Post> findByIsDeletedFalseOrderByUpdatedAtDesc(Pageable pageable);
+    List<Post> findByIsDeletedFalseOrderByCreatedAtDesc(Pageable pageable);
 
     Optional<Post> findByUniqueNumAndIsDeletedFalse(String uniqueNum);
 

@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface CommentRepository extends JpaRepository<Comment, Integer> {
     boolean existsByUniqueNum(String uniqueNum);
 
-    List<Comment> findByPost_UniqueNumAndIsDeletedFalseOrderByUpdatedAtDesc(String uniqueNum, Pageable pageable);
+    List<Comment> findByPost_UniqueNumAndIsDeletedFalseOrderByCreatedAtDesc(String uniqueNum, Pageable pageable);
 
     Optional<Comment> findByUniqueNumAndIsDeletedFalse(String uniqueNum);
 
