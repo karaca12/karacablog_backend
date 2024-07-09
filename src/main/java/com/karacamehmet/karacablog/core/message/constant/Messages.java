@@ -8,6 +8,7 @@ public class Messages {
         public static final String NO_POST_FOUND = "noPostFound";
         public static final String NO_COMMENT_FOUND = "noCommentFound";
         public static final String USERS_DONT_MATCH = "usersDontMatch";
+        public static final String PASSWORDS_DONT_MATCH = "passwordsDontMatch";
     }
 
     public static class ValidationErrors {

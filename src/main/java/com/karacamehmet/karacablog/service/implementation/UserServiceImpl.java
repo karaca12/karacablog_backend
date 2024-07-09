@@ -1,7 +1,10 @@
 package com.karacamehmet.karacablog.service.implementation;
 
+import com.karacamehmet.karacablog.dto.request.ChangePasswordRequest;
 import com.karacamehmet.karacablog.dto.request.RegisterRequest;
+import com.karacamehmet.karacablog.dto.request.UpdateUserRequest;
 import com.karacamehmet.karacablog.dto.response.GetUserResponse;
+import com.karacamehmet.karacablog.dto.response.UpdateUserResponse;
 import com.karacamehmet.karacablog.model.User;
 import com.karacamehmet.karacablog.repository.UserRepository;
 import com.karacamehmet.karacablog.service.abstraction.RoleService;
@@ -9,6 +12,8 @@ import com.karacamehmet.karacablog.service.abstraction.UserService;
 import com.karacamehmet.karacablog.service.mapper.UserMapper;
 import com.karacamehmet.karacablog.service.rules.UserBusinessRules;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,17 +26,17 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
-    private final UserBusinessRules userBusinessRules;
+    private final UserBusinessRules businessRules;
     private final RoleService roleService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userBusinessRules.getUserFromOptional(userRepository.findByUsername(username));
+        return businessRules.getUserFromOptional(userRepository.findByUsername(username));
     }
 
     @Override
     public User createUser(RegisterRequest request) {
-        userBusinessRules.checkIfUserAlreadyExists(request.getUsername());
+        businessRules.checkIfUserAlreadyExists(request.getUsername());
         User user = UserMapper.INSTANCE.getUserFromRegisterRequest(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRoles(roleService.getRoleUser());
@@ -40,12 +45,35 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findUserByUsername(String username) {
-        return userBusinessRules.getUserFromOptional(userRepository.findByUsername(username));
+        return businessRules.getUserFromOptional(userRepository.findByUsername(username));
     }
 
     @Override
-    public GetUserResponse getUserByUserName(String userName) {
-        User user = findUserByUsername(userName);
+    public GetUserResponse getUserByUserName(String username) {
+        User user = findUserByUsername(username);
         return UserMapper.INSTANCE.getUserResponseFromUser(user);
+    }
+
+    @Override
+    public UpdateUserResponse updateUserByUserName(String username, UpdateUserRequest request) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        businessRules.checkIfJWTUsernameMatchesRequestUsername(authentication.getName(), username);
+        User user = findUserByUsername(username);
+        user.setEmail(request.getEmail());
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
+        user.setBirthDate(request.getBirthDate());
+        return UserMapper.INSTANCE.getUpdateUserResponseFromUser(userRepository.save(user));
+    }
+
+    @Override
+    public Void changePasswordByUserName(String username, ChangePasswordRequest request) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        businessRules.checkIfJWTUsernameMatchesRequestUsername(authentication.getName(), username);
+        User user = findUserByUsername(username);
+        businessRules.checkIfPasswordsMatch(user.getPassword(), request);
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
+        return null;
     }
 }
