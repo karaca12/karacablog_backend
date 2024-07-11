@@ -2,6 +2,7 @@ package com.karacamehmet.karacablog.dto.request;
 
 import com.karacamehmet.karacablog.core.message.constant.Messages;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,5 +24,6 @@ public class CreatePostRequest {
     private String content;
     @NotBlank(message = Messages.ValidationErrors.NOT_BLANK)
     private String author;
-    private List<String> tags;
+    @Size(max = 4, message = Messages.ValidationErrors.SIZE)
+    private List<@Length(min = 1, max = 50, message = Messages.ValidationErrors.LENGTH) String> tags;
 }

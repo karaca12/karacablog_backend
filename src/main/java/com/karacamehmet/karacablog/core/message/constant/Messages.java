@@ -18,5 +18,6 @@ public class Messages {
         public static final String MIN = "{validation.minValue}";
         public static final String EMAIL = "{validation.email}";
         public static final String LENGTH = "{validation.length}";
+        public static final String SIZE = "{validation.size}";
     }
 }
