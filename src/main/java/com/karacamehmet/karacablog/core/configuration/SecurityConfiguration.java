@@ -4,6 +4,7 @@ import com.karacamehmet.karacablog.core.jwt.filter.JwtAuthFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,7 +14,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
 
 import java.util.List;
 
@@ -26,7 +26,7 @@ public class SecurityConfiguration {
             "/v2/api-docs",
             "/v3/api-docs",
             "/v3/api-docs/**",
-            "/api/auth/**"
+            "/api/auth/**",
     };
 
     @Bean
@@ -39,14 +39,20 @@ public class SecurityConfiguration {
         httpSecurity
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(req -> req.requestMatchers(WHITELIST_URLS).permitAll())
+                .authorizeHttpRequests(req -> {
+                    req.requestMatchers(WHITELIST_URLS).permitAll();
+                    req.requestMatchers(HttpMethod.GET,"/api/posts").permitAll();
+                    req.requestMatchers(HttpMethod.GET,"/api/posts/{uniqueNum}").permitAll();
+                    req.requestMatchers(HttpMethod.GET,"/api/comments/post/{postUniqueNum}").permitAll();
+                    req.requestMatchers(HttpMethod.GET,"api/users/{username}").permitAll();
+                })
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(req -> req.anyRequest().authenticated());
         return httpSecurity.build();
     }
 
     @Bean
-    public CorsConfigurationSource corsConfigurationSource(){
+    public CorsConfigurationSource corsConfigurationSource() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
