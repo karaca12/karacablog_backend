@@ -45,12 +45,12 @@ public class CommentBusinessRules {
 
     }
 
-    public long checkIfCommentsCountIsMultipleOfPageSizeAndReturnPageCount(int pageSize,String postUniqueNum) {
+    public long checkIfCommentsCountIsMultipleOfPageSizeAndReturnPageCount(int pageSize, String postUniqueNum) {
         long commentCount = commentRepository.countByIsDeletedFalseAndPost_UniqueNum(postUniqueNum);
-        if (commentCount%pageSize == 0) {
-            return commentCount/pageSize;
-        }else {
-            return commentCount/pageSize+1;
+        if (commentCount % pageSize == 0) {
+            return commentCount / pageSize;
+        } else {
+            return commentCount / pageSize + 1;
         }
 
     }

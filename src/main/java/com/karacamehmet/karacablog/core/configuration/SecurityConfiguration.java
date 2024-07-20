@@ -41,10 +41,10 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req -> {
                     req.requestMatchers(WHITELIST_URLS).permitAll();
-                    req.requestMatchers(HttpMethod.GET,"/api/posts").permitAll();
-                    req.requestMatchers(HttpMethod.GET,"/api/posts/{uniqueNum}").permitAll();
-                    req.requestMatchers(HttpMethod.GET,"/api/comments/post/{postUniqueNum}").permitAll();
-                    req.requestMatchers(HttpMethod.GET,"api/users/{username}").permitAll();
+                    req.requestMatchers(HttpMethod.GET, "/api/posts").permitAll();
+                    req.requestMatchers(HttpMethod.GET, "/api/posts/{uniqueNum}").permitAll();
+                    req.requestMatchers(HttpMethod.GET, "/api/comments/post/{postUniqueNum}").permitAll();
+                    req.requestMatchers(HttpMethod.GET, "api/users/{username}").permitAll();
                 })
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(req -> req.anyRequest().authenticated());

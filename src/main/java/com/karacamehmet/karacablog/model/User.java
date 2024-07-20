@@ -7,7 +7,7 @@ import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -33,7 +33,7 @@ public class User extends BaseEntity implements UserDetails {
     private String lastName;
 
     @Column(name = "birth_date", nullable = false)
-    private LocalDate birthDate;
+    private LocalDateTime birthDate;
 
     @OneToMany(mappedBy = "user")
     private List<Post> posts;

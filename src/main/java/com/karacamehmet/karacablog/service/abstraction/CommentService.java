@@ -3,7 +3,10 @@ package com.karacamehmet.karacablog.service.abstraction;
 import com.karacamehmet.karacablog.core.paging.PageInfo;
 import com.karacamehmet.karacablog.dto.request.CreateCommentRequest;
 import com.karacamehmet.karacablog.dto.request.UpdateCommentRequest;
-import com.karacamehmet.karacablog.dto.response.*;
+import com.karacamehmet.karacablog.dto.response.CreateCommentResponse;
+import com.karacamehmet.karacablog.dto.response.GetAllCommentsOfPostListResponse;
+import com.karacamehmet.karacablog.dto.response.GetCommentResponse;
+import com.karacamehmet.karacablog.dto.response.UpdateCommentResponse;
 import com.karacamehmet.karacablog.model.Comment;
 
 import java.util.List;

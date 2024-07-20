@@ -37,10 +37,10 @@ public class UserBusinessRules {
     }
 
     public void checkIfPasswordsMatch(String userPassword, ChangePasswordRequest request) {
-        if (!request.getNewPassword().equals(request.getConfirmNewPassword())){
+        if (!request.getNewPassword().equals(request.getConfirmNewPassword())) {
             throw new BusinessException(messageService.getMessage(Messages.BusinessErrors.PASSWORDS_DONT_MATCH));
         }
-        if (!passwordEncoder.matches(request.getCurrentPassword(), userPassword)){
+        if (!passwordEncoder.matches(request.getCurrentPassword(), userPassword)) {
             throw new BusinessException(messageService.getMessage(Messages.BusinessErrors.WRONG_USERNAME_OR_PASSWORD));
         }
     }

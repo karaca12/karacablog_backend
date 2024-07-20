@@ -1,9 +1,10 @@
 package com.karacamehmet.karacablog.core.exception;
 
-import com.karacamehmet.karacablog.core.exception.detail.*;
+import com.karacamehmet.karacablog.core.exception.detail.BadCredentialsProblemDetails;
+import com.karacamehmet.karacablog.core.exception.detail.BusinessProblemDetails;
+import com.karacamehmet.karacablog.core.exception.detail.InternalAuthenticationProblemDetails;
+import com.karacamehmet.karacablog.core.exception.detail.ValidationProblemDetails;
 import com.karacamehmet.karacablog.core.exception.type.BusinessException;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.MalformedJwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;

@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -16,5 +16,5 @@ public class UpdateUserResponse {
     private String username;
     private String firstName;
     private String lastName;
-    private LocalDate birthDate;
+    private LocalDateTime birthDate;
 }

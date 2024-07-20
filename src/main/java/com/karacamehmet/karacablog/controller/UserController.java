@@ -24,12 +24,12 @@ public class UserController {
     }
 
     @PutMapping("/{username}")
-    public ResponseEntity<UpdateUserResponse> updateUserByUserName(@PathVariable String username, @Valid @RequestBody UpdateUserRequest request){
-        return new ResponseEntity<>(userService.updateUserByUserName(username,request),HttpStatus.OK);
+    public ResponseEntity<UpdateUserResponse> updateUserByUserName(@PathVariable String username, @Valid @RequestBody UpdateUserRequest request) {
+        return new ResponseEntity<>(userService.updateUserByUserName(username, request), HttpStatus.OK);
     }
 
     @PutMapping("/{username}/password")
-    public ResponseEntity<Void> changePasswordByUserName(@PathVariable String username,@Valid @RequestBody ChangePasswordRequest request){
-        return new ResponseEntity<>(userService.changePasswordByUserName(username,request),HttpStatus.OK);
+    public ResponseEntity<Void> changePasswordByUserName(@PathVariable String username, @Valid @RequestBody ChangePasswordRequest request) {
+        return new ResponseEntity<>(userService.changePasswordByUserName(username, request), HttpStatus.OK);
     }
 }

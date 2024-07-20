@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -33,5 +33,5 @@ public class RegisterRequest {
     @Length(min = 1, max = 50, message = Messages.ValidationErrors.LENGTH)
     private String lastName;
     @NotNull(message = Messages.ValidationErrors.NOT_NULL)
-    private LocalDate birthDate;
+    private LocalDateTime birthDate;
 }

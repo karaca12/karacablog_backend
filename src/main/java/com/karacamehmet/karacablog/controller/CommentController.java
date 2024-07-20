@@ -3,15 +3,16 @@ package com.karacamehmet.karacablog.controller;
 import com.karacamehmet.karacablog.core.paging.PageInfo;
 import com.karacamehmet.karacablog.dto.request.CreateCommentRequest;
 import com.karacamehmet.karacablog.dto.request.UpdateCommentRequest;
-import com.karacamehmet.karacablog.dto.response.*;
+import com.karacamehmet.karacablog.dto.response.CreateCommentResponse;
+import com.karacamehmet.karacablog.dto.response.GetAllCommentsOfPostListResponse;
+import com.karacamehmet.karacablog.dto.response.GetCommentResponse;
+import com.karacamehmet.karacablog.dto.response.UpdateCommentResponse;
 import com.karacamehmet.karacablog.service.abstraction.CommentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/comments")

@@ -3,7 +3,10 @@ package com.karacamehmet.karacablog.service.implementation;
 import com.karacamehmet.karacablog.core.paging.PageInfo;
 import com.karacamehmet.karacablog.dto.request.CreateCommentRequest;
 import com.karacamehmet.karacablog.dto.request.UpdateCommentRequest;
-import com.karacamehmet.karacablog.dto.response.*;
+import com.karacamehmet.karacablog.dto.response.CreateCommentResponse;
+import com.karacamehmet.karacablog.dto.response.GetAllCommentsOfPostListResponse;
+import com.karacamehmet.karacablog.dto.response.GetCommentResponse;
+import com.karacamehmet.karacablog.dto.response.UpdateCommentResponse;
 import com.karacamehmet.karacablog.model.Comment;
 import com.karacamehmet.karacablog.repository.CommentRepository;
 import com.karacamehmet.karacablog.service.abstraction.CommentService;
@@ -22,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 
 @Service
@@ -51,7 +55,7 @@ public class CommentServiceImpl implements CommentService {
         List<Comment> comments = commentRepository.findByPost_UniqueNumAndIsDeletedFalseOrderByCreatedAtDesc(postUniqueNum, pageable);
         GetAllCommentsOfPostListResponse response = new GetAllCommentsOfPostListResponse();
         response.setComments(CommentMapper.INSTANCE.getGetAllCommentsOfPostResponsesFromComments(comments));
-        long pageCount = businessRules.checkIfCommentsCountIsMultipleOfPageSizeAndReturnPageCount(pageInfo.getSize(),postUniqueNum);
+        long pageCount = businessRules.checkIfCommentsCountIsMultipleOfPageSizeAndReturnPageCount(pageInfo.getSize(), postUniqueNum);
         response.setTotalPages(pageCount);
         return response;
     }
@@ -78,7 +82,7 @@ public class CommentServiceImpl implements CommentService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         businessRules.checkIfJWTUsernameMatchesRequestAuthor(authentication.getName(), comment.getUser().getUsername());
         comment.setDeleted(true);
-        comment.setDeletedAt(LocalDateTime.now());
+        comment.setDeletedAt(LocalDateTime.now(ZoneOffset.UTC));
         commentRepository.save(comment);
         return null;
     }
@@ -87,7 +91,7 @@ public class CommentServiceImpl implements CommentService {
     public void deleteAllCommentsOfPostWhileDeletingPost(List<Comment> comments) {
         for (Comment comment : comments) {
             comment.setDeleted(true);
-            comment.setDeletedAt(LocalDateTime.now());
+            comment.setDeletedAt(LocalDateTime.now(ZoneOffset.UTC));
             commentRepository.save(comment);
         }
     }

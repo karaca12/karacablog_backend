@@ -46,10 +46,10 @@ public class PostBusinessRules {
 
     public long checkIfPostCountIsMultipleOfPageSizeAndReturnPageCount(int pageSize) {
         long postCount = postRepository.countByIsDeletedFalse();
-        if (postCount%pageSize == 0) {
-            return postCount/pageSize;
-        }else {
-            return postCount/pageSize+1;
+        if (postCount % pageSize == 0) {
+            return postCount / pageSize;
+        } else {
+            return postCount / pageSize + 1;
         }
     }
 

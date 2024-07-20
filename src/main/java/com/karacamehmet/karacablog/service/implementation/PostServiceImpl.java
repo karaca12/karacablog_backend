@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 
 @Service
@@ -81,7 +82,7 @@ public class PostServiceImpl implements PostService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         businessRules.checkIfJWTUsernameMatchesRequestAuthor(authentication.getName(), post.getUser().getUsername());
         post.setDeleted(true);
-        post.setDeletedAt(LocalDateTime.now());
+        post.setDeletedAt(LocalDateTime.now(ZoneOffset.UTC));
         eventPublisher.publishEvent(new PostDeletedEvent(this, post.getComments()));
         postRepository.save(post);
         return null;
