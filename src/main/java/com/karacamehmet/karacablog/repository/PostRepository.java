@@ -16,8 +16,13 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
 
     Optional<Post> findByUniqueNumAndIsDeletedFalse(String uniqueNum);
 
-    @Query("select p from Post p where p.title like %:keyword% or p.content like %:keyword%")
-    List<Post> searchByTitleOrContent(@Param("keyword") String keyword, Pageable pageable);
+    @Query("select distinct p from Post p left join p.tags t where p.isDeleted=false " +
+            "and (lower(p.title) like lower(concat('%', :keyword, '%')) " +
+            "or lower(p.content) like lower(concat('%', :keyword, '%')) " +
+            "or lower(t.name) like lower(concat('%', :keyword, '%')))")
+    List<Post> searchByTitleContentOrTag(@Param("keyword") String keyword, Pageable pageable);
+
+
 
 
     long countByIsDeletedFalse();

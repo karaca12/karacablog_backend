@@ -94,9 +94,13 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<SearchPostResponse> searchByTitleOrContent(String keyword, PageInfo pageInfo) {
+    public SearchPostListResponse searchByTitleContentOrTag(String keyword, PageInfo pageInfo) {
         Pageable pageable = PageRequest.of(pageInfo.getPage(), pageInfo.getSize());
-        List<Post> posts = postRepository.searchByTitleOrContent(keyword, pageable);
-        return PostMapper.INSTANCE.getSearchPostResponsesFromPosts(posts);
+        List<Post> posts = postRepository.searchByTitleContentOrTag(keyword, pageable);
+        SearchPostListResponse response = new SearchPostListResponse();
+        response.setPosts(PostMapper.INSTANCE.getSearchPostResponsesFromPosts(posts));
+        long pageCount = businessRules.checkIfPostCountIsMultipleOfPageSizeAndReturnPageCount(pageInfo.getSize());
+        response.setTotalPages(pageCount);
+        return response;
     }
 }

@@ -6,8 +6,6 @@ import com.karacamehmet.karacablog.dto.request.UpdatePostRequest;
 import com.karacamehmet.karacablog.dto.response.*;
 import com.karacamehmet.karacablog.model.Post;
 
-import java.util.List;
-
 public interface PostService {
 
     CreatePostResponse createPost(CreatePostRequest request);
@@ -22,5 +20,5 @@ public interface PostService {
 
     Post findByUniqueNum(String uniqueNum);
 
-    List<SearchPostResponse> searchByTitleOrContent(String keyword, PageInfo pageInfo);
+    SearchPostListResponse searchByTitleContentOrTag(String keyword, PageInfo pageInfo);
 }

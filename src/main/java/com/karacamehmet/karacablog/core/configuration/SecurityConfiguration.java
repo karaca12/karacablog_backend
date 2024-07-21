@@ -45,6 +45,7 @@ public class SecurityConfiguration {
                     req.requestMatchers(HttpMethod.GET, "/api/posts/{uniqueNum}").permitAll();
                     req.requestMatchers(HttpMethod.GET, "/api/comments/post/{postUniqueNum}").permitAll();
                     req.requestMatchers(HttpMethod.GET, "api/users/{username}").permitAll();
+                    req.requestMatchers(HttpMethod.POST,"api/posts/search/{keyword}").permitAll();
                 })
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(req -> req.anyRequest().authenticated());

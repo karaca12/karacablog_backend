@@ -11,8 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/posts")
 @RequiredArgsConstructor
@@ -47,10 +45,10 @@ public class PostController {
     }
 
     @PostMapping("/search/{keyword}")
-    public ResponseEntity<List<SearchPostResponse>> searchByTitleOrContent(@PathVariable String keyword,
-                                                                           @RequestParam int page, @RequestParam int size) {
+    public ResponseEntity<SearchPostListResponse> searchByTitleContentOrTag(@PathVariable String keyword,
+                                                                            @RequestParam int page, @RequestParam int size) {
         PageInfo pageInfo = new PageInfo(page, size);
-        return new ResponseEntity<>(postService.searchByTitleOrContent(keyword, pageInfo), HttpStatus.OK);
+        return new ResponseEntity<>(postService.searchByTitleContentOrTag(keyword, pageInfo), HttpStatus.OK);
     }
 
 }
