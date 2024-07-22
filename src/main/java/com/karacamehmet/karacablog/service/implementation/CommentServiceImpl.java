@@ -17,6 +17,7 @@ import com.karacamehmet.karacablog.service.mapper.CommentMapper;
 import com.karacamehmet.karacablog.service.rules.CommentBusinessRules;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
@@ -49,26 +50,25 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public GetAllCommentsOfPostListResponse getAllCommentsOfPostByPostUniqueNum(PageInfo pageInfo, String postUniqueNum) {
+    public GetAllCommentsOfPostListResponse getAllByPostUniqueNum(PageInfo pageInfo, String postUniqueNum) {
         Pageable pageable = PageRequest.of(pageInfo.getPage(), pageInfo.getSize());
         postService.findByUniqueNum(postUniqueNum);
-        List<Comment> comments = commentRepository.findByPost_UniqueNumAndIsDeletedFalseOrderByCreatedAtDesc(postUniqueNum, pageable);
+        Page<Comment> commentsPage = commentRepository.findByPost_UniqueNumAndIsDeletedFalseOrderByCreatedAtDesc(postUniqueNum, pageable);
         GetAllCommentsOfPostListResponse response = new GetAllCommentsOfPostListResponse();
-        response.setComments(CommentMapper.INSTANCE.getGetAllCommentsOfPostResponsesFromComments(comments));
-        long pageCount = businessRules.checkIfCommentsCountIsMultipleOfPageSizeAndReturnPageCount(pageInfo.getSize(), postUniqueNum);
-        response.setTotalPages(pageCount);
+        response.setComments(CommentMapper.INSTANCE.getGetAllCommentsOfPostResponsesFromComments(commentsPage.getContent()));
+        response.setTotalPages(commentsPage.getTotalPages());
         return response;
     }
 
     @Override
-    public GetCommentResponse getCommentByUniqueNum(String uniqueNum) {
+    public GetCommentResponse getByUniqueNum(String uniqueNum) {
         Comment comment = businessRules.getCommentFromOptional(commentRepository.findByUniqueNumAndIsDeletedFalse(uniqueNum));
         return CommentMapper.INSTANCE.getGetCommentResponseFromComment(comment);
     }
 
     //todo: for some reason updatedAt doesnt get updated at response
     @Override
-    public UpdateCommentResponse updateCommentByUniqueNum(String uniqueNum, UpdateCommentRequest request) {
+    public UpdateCommentResponse updateByUniqueNum(String uniqueNum, UpdateCommentRequest request) {
         Comment comment = businessRules.getCommentFromOptional(commentRepository.findByUniqueNumAndIsDeletedFalse(uniqueNum));
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         businessRules.checkIfJWTUsernameMatchesRequestAuthor(authentication.getName(), comment.getUser().getUsername());
@@ -77,7 +77,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Void deleteCommentByUniqueNum(String uniqueNum) {
+    public Void deleteByUniqueNum(String uniqueNum) {
         Comment comment = businessRules.getCommentFromOptional(commentRepository.findByUniqueNumAndIsDeletedFalse(uniqueNum));
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         businessRules.checkIfJWTUsernameMatchesRequestAuthor(authentication.getName(), comment.getUser().getUsername());

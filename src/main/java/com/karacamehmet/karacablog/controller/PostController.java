@@ -18,37 +18,44 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping
-    public ResponseEntity<CreatePostResponse> createPost(@RequestBody @Valid CreatePostRequest request) {
-        return new ResponseEntity<>(postService.createPost(request), HttpStatus.CREATED);
+    public ResponseEntity<CreatePostResponse> create(@RequestBody @Valid CreatePostRequest request) {
+        return new ResponseEntity<>(postService.create(request), HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<GetAllPostsListResponse> getAllPosts(@RequestParam int page, @RequestParam int size) {
+    public ResponseEntity<GetAllPostsListResponse> getAll(@RequestParam int page, @RequestParam int size) {
         PageInfo pageInfo = new PageInfo(page, size);
-        return new ResponseEntity<>(postService.getAllPosts(pageInfo), HttpStatus.OK);
+        return new ResponseEntity<>(postService.getAll(pageInfo), HttpStatus.OK);
     }
 
     @GetMapping("/{uniqueNum}")
-    public ResponseEntity<GetPostResponse> getPostByUniqueNum(@PathVariable String uniqueNum) {
-        return new ResponseEntity<>(postService.getPostByUniqueNum(uniqueNum), HttpStatus.OK);
+    public ResponseEntity<GetPostResponse> getByUniqueNum(@PathVariable String uniqueNum) {
+        return new ResponseEntity<>(postService.getByUniqueNum(uniqueNum), HttpStatus.OK);
     }
 
     @PutMapping("/{uniqueNum}")
-    public ResponseEntity<UpdatePostResponse> updatePostByUniqueNum(@PathVariable String uniqueNum,
+    public ResponseEntity<UpdatePostResponse> updateByUniqueNum(@PathVariable String uniqueNum,
                                                                     @RequestBody @Valid UpdatePostRequest request) {
-        return new ResponseEntity<>(postService.updatePostByUniqueNum(uniqueNum, request), HttpStatus.OK);
+        return new ResponseEntity<>(postService.updateByUniqueNum(uniqueNum, request), HttpStatus.OK);
     }
 
     @DeleteMapping("/{uniqueNum}")
-    public ResponseEntity<Void> deletePostByUniqueNum(@PathVariable String uniqueNum) {
-        return new ResponseEntity<>(postService.deletePostByUniqueNum(uniqueNum), HttpStatus.NO_CONTENT);
+    public ResponseEntity<Void> deleteByUniqueNum(@PathVariable String uniqueNum) {
+        return new ResponseEntity<>(postService.deleteByUniqueNum(uniqueNum), HttpStatus.NO_CONTENT);
     }
 
     @PostMapping("/search/{keyword}")
-    public ResponseEntity<SearchPostListResponse> searchByTitleContentOrTag(@PathVariable String keyword,
+    public ResponseEntity<SearchPostListResponse> searchByTitleOrContent(@PathVariable String keyword,
+                                                                         @RequestParam int page, @RequestParam int size) {
+        PageInfo pageInfo = new PageInfo(page, size);
+        return new ResponseEntity<>(postService.searchByTitleOrContent(keyword, pageInfo), HttpStatus.OK);
+    }
+
+    @PostMapping("/search/tag/{keyword}")
+    public ResponseEntity<SearchPostListResponse> searchByTag(@PathVariable String keyword,
                                                                             @RequestParam int page, @RequestParam int size) {
         PageInfo pageInfo = new PageInfo(page, size);
-        return new ResponseEntity<>(postService.searchByTitleContentOrTag(keyword, pageInfo), HttpStatus.OK);
+        return new ResponseEntity<>(postService.searchByTag(keyword, pageInfo), HttpStatus.OK);
     }
 
 }

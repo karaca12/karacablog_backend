@@ -1,9 +1,11 @@
 package com.karacamehmet.karacablog.service.implementation;
 
+import com.karacamehmet.karacablog.core.paging.PageInfo;
 import com.karacamehmet.karacablog.dto.request.ChangePasswordRequest;
 import com.karacamehmet.karacablog.dto.request.RegisterRequest;
 import com.karacamehmet.karacablog.dto.request.UpdateUserRequest;
 import com.karacamehmet.karacablog.dto.response.GetUserResponse;
+import com.karacamehmet.karacablog.dto.response.SearchUserListResponse;
 import com.karacamehmet.karacablog.dto.response.UpdateUserResponse;
 import com.karacamehmet.karacablog.model.User;
 import com.karacamehmet.karacablog.repository.UserRepository;
@@ -12,6 +14,9 @@ import com.karacamehmet.karacablog.service.abstraction.UserService;
 import com.karacamehmet.karacablog.service.mapper.UserMapper;
 import com.karacamehmet.karacablog.service.rules.UserBusinessRules;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -49,13 +54,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public GetUserResponse getUserByUserName(String username) {
+    public GetUserResponse getByUserName(String username) {
         User user = findUserByUsername(username);
         return UserMapper.INSTANCE.getUserResponseFromUser(user);
     }
 
     @Override
-    public UpdateUserResponse updateUserByUserName(String username, UpdateUserRequest request) {
+    public UpdateUserResponse updateByUserName(String username, UpdateUserRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         businessRules.checkIfJWTUsernameMatchesRequestUsername(authentication.getName(), username);
         User user = findUserByUsername(username);
@@ -75,5 +80,15 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user);
         return null;
+    }
+
+    @Override
+    public SearchUserListResponse searchByKeyword(String keyword, PageInfo pageInfo) {
+        Pageable pageable = PageRequest.of(pageInfo.getPage(), pageInfo.getSize());
+        Page<User> usersPage = userRepository.searchByKeyword(keyword,pageable);
+        SearchUserListResponse response = new SearchUserListResponse();
+        response.setUsers(UserMapper.INSTANCE.getSearchUserResponsesFromUsers(usersPage.getContent()));
+        response.setTotalPages(usersPage.getTotalPages());
+        return response;
     }
 }

@@ -14,13 +14,13 @@ import java.util.List;
 public interface CommentService {
     CreateCommentResponse createCommentToPost(String postUniqueNum, CreateCommentRequest request);
 
-    GetAllCommentsOfPostListResponse getAllCommentsOfPostByPostUniqueNum(PageInfo pageInfo, String postUniqueNum);
+    GetAllCommentsOfPostListResponse getAllByPostUniqueNum(PageInfo pageInfo, String postUniqueNum);
 
-    GetCommentResponse getCommentByUniqueNum(String uniqueNum);
+    GetCommentResponse getByUniqueNum(String uniqueNum);
 
-    UpdateCommentResponse updateCommentByUniqueNum(String uniqueNum, UpdateCommentRequest request);
+    UpdateCommentResponse updateByUniqueNum(String uniqueNum, UpdateCommentRequest request);
 
-    Void deleteCommentByUniqueNum(String uniqueNum);
+    Void deleteByUniqueNum(String uniqueNum);
 
     void deleteAllCommentsOfPostWhileDeletingPost(List<Comment> comments);
 }

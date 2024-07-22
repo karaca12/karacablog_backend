@@ -44,18 +44,10 @@ public class PostBusinessRules {
 
     }
 
-    public long checkIfPostCountIsMultipleOfPageSizeAndReturnPageCount(int pageSize) {
-        long postCount = postRepository.countByIsDeletedFalse();
-        if (postCount % pageSize == 0) {
-            return postCount / pageSize;
-        } else {
-            return postCount / pageSize + 1;
-        }
-    }
-
     public void checkIfJWTUsernameMatchesRequestAuthor(String username, String author) {
         if (!username.equals(author)) {
             throw new BusinessException(messageService.getMessage(Messages.BusinessErrors.USERS_DONT_MATCH));
         }
     }
+
 }

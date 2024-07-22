@@ -21,6 +21,7 @@ public interface CommentMapper {
     @Mapping(target = "author", source = "user.username")
     CreateCommentResponse getCreateCommentResponseFromComment(Comment comment);
 
+    //used by MapStruct
     @Mapping(target = "author", source = "user.username")
     GetAllCommentsOfPostResponse getGetAllCommentsOfPostResponseFromComment(Comment comment);
 

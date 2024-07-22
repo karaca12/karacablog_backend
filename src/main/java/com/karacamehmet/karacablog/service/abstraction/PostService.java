@@ -8,17 +8,19 @@ import com.karacamehmet.karacablog.model.Post;
 
 public interface PostService {
 
-    CreatePostResponse createPost(CreatePostRequest request);
+    CreatePostResponse create(CreatePostRequest request);
 
-    GetAllPostsListResponse getAllPosts(PageInfo pageInfo);
+    GetAllPostsListResponse getAll(PageInfo pageInfo);
 
-    GetPostResponse getPostByUniqueNum(String uniqueNum);
+    GetPostResponse getByUniqueNum(String uniqueNum);
 
-    UpdatePostResponse updatePostByUniqueNum(String uniqueNum, UpdatePostRequest request);
+    UpdatePostResponse updateByUniqueNum(String uniqueNum, UpdatePostRequest request);
 
-    Void deletePostByUniqueNum(String uniqueNum);
+    Void deleteByUniqueNum(String uniqueNum);
 
     Post findByUniqueNum(String uniqueNum);
 
-    SearchPostListResponse searchByTitleContentOrTag(String keyword, PageInfo pageInfo);
+    SearchPostListResponse searchByTitleOrContent(String keyword, PageInfo pageInfo);
+
+    SearchPostListResponse searchByTag(String keyword, PageInfo pageInfo);
 }

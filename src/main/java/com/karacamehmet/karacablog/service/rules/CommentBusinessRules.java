@@ -45,16 +45,6 @@ public class CommentBusinessRules {
 
     }
 
-    public long checkIfCommentsCountIsMultipleOfPageSizeAndReturnPageCount(int pageSize, String postUniqueNum) {
-        long commentCount = commentRepository.countByIsDeletedFalseAndPost_UniqueNum(postUniqueNum);
-        if (commentCount % pageSize == 0) {
-            return commentCount / pageSize;
-        } else {
-            return commentCount / pageSize + 1;
-        }
-
-    }
-
     public void checkIfJWTUsernameMatchesRequestAuthor(String username, String author) {
         if (!username.equals(author)) {
             throw new BusinessException(messageService.getMessage(Messages.BusinessErrors.USERS_DONT_MATCH));

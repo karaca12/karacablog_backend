@@ -14,6 +14,7 @@ import com.karacamehmet.karacablog.service.mapper.PostMapper;
 import com.karacamehmet.karacablog.service.rules.PostBusinessRules;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
@@ -23,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -36,7 +36,7 @@ public class PostServiceImpl implements PostService {
     private final ApplicationEventPublisher eventPublisher;
 
     @Override
-    public CreatePostResponse createPost(CreatePostRequest request) {
+    public CreatePostResponse create(CreatePostRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         businessRules.checkIfJWTUsernameMatchesRequestAuthor(authentication.getName(), request.getAuthor());
         Post post = PostMapper.INSTANCE.getPostFromCreatePostRequest(request);
@@ -49,24 +49,23 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public GetAllPostsListResponse getAllPosts(PageInfo pageInfo) {
+    public GetAllPostsListResponse getAll(PageInfo pageInfo) {
         Pageable pageable = PageRequest.of(pageInfo.getPage(), pageInfo.getSize());
-        List<Post> posts = postRepository.findByIsDeletedFalseOrderByCreatedAtDesc(pageable);
+        Page<Post> postsPage = postRepository.findByIsDeletedFalseOrderByCreatedAtDesc(pageable);
         GetAllPostsListResponse response = new GetAllPostsListResponse();
-        response.setPosts(PostMapper.INSTANCE.getGetAllPostsResponsesFromPosts(posts));
-        long pageCount = businessRules.checkIfPostCountIsMultipleOfPageSizeAndReturnPageCount(pageInfo.getSize());
-        response.setTotalPages(pageCount);
+        response.setPosts(PostMapper.INSTANCE.getGetAllPostsResponsesFromPosts(postsPage.getContent()));
+        response.setTotalPages(postsPage.getTotalPages());
         return response;
     }
 
     @Override
-    public GetPostResponse getPostByUniqueNum(String uniqueNum) {
+    public GetPostResponse getByUniqueNum(String uniqueNum) {
         Post post = businessRules.getPostFromOptional(postRepository.findByUniqueNumAndIsDeletedFalse(uniqueNum));
         return PostMapper.INSTANCE.getGetPostResponseFromPost(post);
     }
 
     @Override
-    public UpdatePostResponse updatePostByUniqueNum(String uniqueNum, UpdatePostRequest request) {
+    public UpdatePostResponse updateByUniqueNum(String uniqueNum, UpdatePostRequest request) {
         Post post = businessRules.getPostFromOptional(postRepository.findByUniqueNumAndIsDeletedFalse(uniqueNum));
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         businessRules.checkIfJWTUsernameMatchesRequestAuthor(authentication.getName(), post.getUser().getUsername());
@@ -77,7 +76,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Void deletePostByUniqueNum(String uniqueNum) {
+    public Void deleteByUniqueNum(String uniqueNum) {
         Post post = businessRules.getPostFromOptional(postRepository.findByUniqueNumAndIsDeletedFalse(uniqueNum));
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         businessRules.checkIfJWTUsernameMatchesRequestAuthor(authentication.getName(), post.getUser().getUsername());
@@ -94,13 +93,22 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public SearchPostListResponse searchByTitleContentOrTag(String keyword, PageInfo pageInfo) {
+    public SearchPostListResponse searchByTitleOrContent(String keyword, PageInfo pageInfo) {
         Pageable pageable = PageRequest.of(pageInfo.getPage(), pageInfo.getSize());
-        List<Post> posts = postRepository.searchByTitleContentOrTag(keyword, pageable);
+        Page<Post> postsPage = postRepository.searchByTitleOrContent(keyword, pageable);
         SearchPostListResponse response = new SearchPostListResponse();
-        response.setPosts(PostMapper.INSTANCE.getSearchPostResponsesFromPosts(posts));
-        long pageCount = businessRules.checkIfPostCountIsMultipleOfPageSizeAndReturnPageCount(pageInfo.getSize());
-        response.setTotalPages(pageCount);
+        response.setPosts(PostMapper.INSTANCE.getSearchPostResponsesFromPosts(postsPage.getContent()));
+        response.setTotalPages(postsPage.getTotalPages());
+        return response;
+    }
+
+    @Override
+    public SearchPostListResponse searchByTag(String keyword, PageInfo pageInfo) {
+        Pageable pageable = PageRequest.of(pageInfo.getPage(), pageInfo.getSize());
+        Page<Post> postsPage = postRepository.searchByTagName(keyword, pageable);
+        SearchPostListResponse response = new SearchPostListResponse();
+        response.setPosts(PostMapper.INSTANCE.getSearchPostResponsesFromPosts(postsPage.getContent()));
+        response.setTotalPages(postsPage.getTotalPages());
         return response;
     }
 }

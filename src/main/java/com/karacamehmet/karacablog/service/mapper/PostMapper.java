@@ -22,11 +22,13 @@ public interface PostMapper {
     @Mapping(target = "tags", ignore = true)
     CreatePostResponse getCreatePostResponseFromPost(Post post);
 
+    //used by MapStruct
     @Mapping(target = "author", source = "user.username")
     GetAllPostsResponse getGetAllPostsResponseFromPost(Post post);
 
     List<GetAllPostsResponse> getGetAllPostsResponsesFromPosts(List<Post> posts);
 
+    //used by MapStruct
     default List<String> mapTagsToStringList(List<Tag> tags) {
         if (tags == null) {
             return null;
@@ -42,6 +44,7 @@ public interface PostMapper {
     @Mapping(target = "author", source = "user.username")
     UpdatePostResponse getUpdatePostResponseFromPost(Post post);
 
+    //used by MapStruct
     @Mapping(target = "author", source = "user.username")
     SearchPostResponse getSearchPostResponseFromPost(Post post);
 
