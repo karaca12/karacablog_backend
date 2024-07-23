@@ -23,4 +23,6 @@ public interface PostService {
     SearchPostListResponse searchByTitleOrContent(String keyword, PageInfo pageInfo);
 
     SearchPostListResponse searchByTag(String keyword, PageInfo pageInfo);
+
+    GetPostByUsernameListResponse getByUsername(String username, PageInfo pageInfo);
 }

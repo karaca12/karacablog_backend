@@ -20,22 +20,22 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final UserService userService;
 
-    @GetMapping("/{username}")
+    @GetMapping("{username}")
     public ResponseEntity<GetUserResponse> getByUserName(@PathVariable String username) {
         return new ResponseEntity<>(userService.getByUserName(username), HttpStatus.OK);
     }
 
-    @PutMapping("/{username}")
+    @PutMapping("{username}")
     public ResponseEntity<UpdateUserResponse> updateByUserName(@PathVariable String username, @Valid @RequestBody UpdateUserRequest request) {
         return new ResponseEntity<>(userService.updateByUserName(username, request), HttpStatus.OK);
     }
 
-    @PutMapping("/{username}/password")
+    @PutMapping("{username}/password")
     public ResponseEntity<Void> changePasswordByUserName(@PathVariable String username, @Valid @RequestBody ChangePasswordRequest request) {
         return new ResponseEntity<>(userService.changePasswordByUserName(username, request), HttpStatus.OK);
     }
 
-    @PostMapping("/search/{keyword}")
+    @PostMapping("search/{keyword}")
     public ResponseEntity<SearchUserListResponse> searchByKeyword(@PathVariable String keyword,
                                                                   @RequestParam int page, @RequestParam int size){
         PageInfo pageInfo = new PageInfo(page, size);

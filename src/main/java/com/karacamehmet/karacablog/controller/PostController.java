@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/posts")
+@RequestMapping("api/posts")
 @RequiredArgsConstructor
 public class PostController {
     private final PostService postService;
@@ -28,34 +28,41 @@ public class PostController {
         return new ResponseEntity<>(postService.getAll(pageInfo), HttpStatus.OK);
     }
 
-    @GetMapping("/{uniqueNum}")
+    @GetMapping("{uniqueNum}")
     public ResponseEntity<GetPostResponse> getByUniqueNum(@PathVariable String uniqueNum) {
         return new ResponseEntity<>(postService.getByUniqueNum(uniqueNum), HttpStatus.OK);
     }
 
-    @PutMapping("/{uniqueNum}")
+    @PutMapping("{uniqueNum}")
     public ResponseEntity<UpdatePostResponse> updateByUniqueNum(@PathVariable String uniqueNum,
                                                                     @RequestBody @Valid UpdatePostRequest request) {
         return new ResponseEntity<>(postService.updateByUniqueNum(uniqueNum, request), HttpStatus.OK);
     }
 
-    @DeleteMapping("/{uniqueNum}")
+    @DeleteMapping("{uniqueNum}")
     public ResponseEntity<Void> deleteByUniqueNum(@PathVariable String uniqueNum) {
         return new ResponseEntity<>(postService.deleteByUniqueNum(uniqueNum), HttpStatus.NO_CONTENT);
     }
 
-    @PostMapping("/search/{keyword}")
+    @PostMapping("search/{keyword}")
     public ResponseEntity<SearchPostListResponse> searchByTitleOrContent(@PathVariable String keyword,
                                                                          @RequestParam int page, @RequestParam int size) {
         PageInfo pageInfo = new PageInfo(page, size);
         return new ResponseEntity<>(postService.searchByTitleOrContent(keyword, pageInfo), HttpStatus.OK);
     }
 
-    @PostMapping("/search/tag/{keyword}")
+    @PostMapping("search/tag/{keyword}")
     public ResponseEntity<SearchPostListResponse> searchByTag(@PathVariable String keyword,
                                                                             @RequestParam int page, @RequestParam int size) {
         PageInfo pageInfo = new PageInfo(page, size);
         return new ResponseEntity<>(postService.searchByTag(keyword, pageInfo), HttpStatus.OK);
+    }
+
+    @GetMapping("user/{username}")
+    public ResponseEntity<GetPostByUsernameListResponse> getByUsername(@PathVariable String username,
+                                                                        @RequestParam int page, @RequestParam int size) {
+        PageInfo pageInfo = new PageInfo(page, size);
+        return new ResponseEntity<>(postService.getByUsername(username,pageInfo), HttpStatus.OK);
     }
 
 }

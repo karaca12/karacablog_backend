@@ -24,4 +24,6 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
     @Query("select distinct p from Post p left join p.tags t where p.isDeleted=false " +
             "and lower(t.name) like lower(concat('%', :keyword, '%'))")
     Page<Post> searchByTagName(String keyword, Pageable pageable);
+
+    Page<Post> findByIsDeletedFalseAndUser_UsernameOrderByCreatedAtDesc(String username, Pageable pageable);
 }

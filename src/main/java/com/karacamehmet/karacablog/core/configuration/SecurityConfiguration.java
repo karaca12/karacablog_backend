@@ -41,11 +41,12 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req -> {
                     req.requestMatchers(WHITELIST_URLS).permitAll();
-                    req.requestMatchers(HttpMethod.GET, "/api/posts").permitAll();
-                    req.requestMatchers(HttpMethod.GET, "/api/posts/{uniqueNum}").permitAll();
+                    req.requestMatchers(HttpMethod.GET, "api/posts").permitAll();
+                    req.requestMatchers(HttpMethod.GET, "api/posts/{uniqueNum}").permitAll();
+                    req.requestMatchers(HttpMethod.GET, "api/posts/user/{username}").permitAll();
                     req.requestMatchers(HttpMethod.POST,"api/posts/search/{keyword}").permitAll();
                     req.requestMatchers(HttpMethod.POST,"api/posts/search/tag/{keyword}").permitAll();
-                    req.requestMatchers(HttpMethod.GET, "/api/comments/post/{postUniqueNum}").permitAll();
+                    req.requestMatchers(HttpMethod.GET, "api/comments/post/{postUniqueNum}").permitAll();
                     req.requestMatchers(HttpMethod.GET, "api/users/{username}").permitAll();
                     req.requestMatchers(HttpMethod.POST,"api/users/search/{keyword}").permitAll();
                 })

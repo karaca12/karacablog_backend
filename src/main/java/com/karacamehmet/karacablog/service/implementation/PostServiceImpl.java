@@ -111,4 +111,14 @@ public class PostServiceImpl implements PostService {
         response.setTotalPages(postsPage.getTotalPages());
         return response;
     }
+
+    @Override
+    public GetPostByUsernameListResponse getByUsername(String username, PageInfo pageInfo) {
+        Pageable pageable = PageRequest.of(pageInfo.getPage(), pageInfo.getSize());
+        Page<Post> postsPage = postRepository.findByIsDeletedFalseAndUser_UsernameOrderByCreatedAtDesc(username,pageable);
+        GetPostByUsernameListResponse response = new GetPostByUsernameListResponse();
+        response.setPosts(PostMapper.INSTANCE.getGetPostByUsernameResponsesFromPost(postsPage.getContent()));
+        response.setTotalPages(postsPage.getTotalPages());
+        return response;
+    }
 }

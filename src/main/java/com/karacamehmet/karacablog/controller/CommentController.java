@@ -15,36 +15,36 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/comments")
+@RequestMapping("api/comments")
 @RequiredArgsConstructor
 public class CommentController {
     private final CommentService commentService;
 
-    @PostMapping("/post/{postUniqueNum}")
+    @PostMapping("post/{postUniqueNum}")
     public ResponseEntity<CreateCommentResponse> createCommentToPost(@PathVariable String postUniqueNum,
                                                                      @RequestBody CreateCommentRequest request) {
         return new ResponseEntity<>(commentService.createCommentToPost(postUniqueNum, request), HttpStatus.CREATED);
     }
 
-    @GetMapping("/post/{postUniqueNum}")
+    @GetMapping("post/{postUniqueNum}")
     public ResponseEntity<GetAllCommentsOfPostListResponse> getAllByPostUniqueNum(
             @RequestParam int page, @RequestParam int size, @PathVariable String postUniqueNum) {
         PageInfo pageInfo = new PageInfo(page, size);
         return new ResponseEntity<>(commentService.getAllByPostUniqueNum(pageInfo, postUniqueNum), HttpStatus.OK);
     }
 
-    @GetMapping("/{uniqueNum}")
+    @GetMapping("{uniqueNum}")
     public ResponseEntity<GetCommentResponse> getByUniqueNum(@PathVariable String uniqueNum) {
         return new ResponseEntity<>(commentService.getByUniqueNum(uniqueNum), HttpStatus.OK);
     }
 
-    @PutMapping("/{uniqueNum}")
+    @PutMapping("{uniqueNum}")
     public ResponseEntity<UpdateCommentResponse> updateByUniqueNum(@PathVariable String uniqueNum,
                                                                           @RequestBody @Valid UpdateCommentRequest request) {
         return new ResponseEntity<>(commentService.updateByUniqueNum(uniqueNum, request), HttpStatus.OK);
     }
 
-    @DeleteMapping("/{uniqueNum}")
+    @DeleteMapping("{uniqueNum}")
     public ResponseEntity<Void> deleteByUniqueNum(@PathVariable String uniqueNum) {
         return new ResponseEntity<>(commentService.deleteByUniqueNum(uniqueNum), HttpStatus.NO_CONTENT);
     }

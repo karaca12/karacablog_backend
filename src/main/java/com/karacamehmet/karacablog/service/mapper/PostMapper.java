@@ -49,4 +49,10 @@ public interface PostMapper {
     SearchPostResponse getSearchPostResponseFromPost(Post post);
 
     List<SearchPostResponse> getSearchPostResponsesFromPosts(List<Post> posts);
+
+    //used by MapStruct
+    @Mapping(target = "author", source = "user.username")
+    GetPostByUsernameResponse getGetPostByUsernameResponseFromPost(Post post);
+
+    List<GetPostByUsernameResponse> getGetPostByUsernameResponsesFromPost(List<Post> posts);
 }
