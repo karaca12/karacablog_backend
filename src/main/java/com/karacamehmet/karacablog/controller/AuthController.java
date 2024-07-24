@@ -3,6 +3,7 @@ package com.karacamehmet.karacablog.controller;
 import com.karacamehmet.karacablog.dto.request.LoginRequest;
 import com.karacamehmet.karacablog.dto.request.RegisterRequest;
 import com.karacamehmet.karacablog.service.abstraction.AuthService;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

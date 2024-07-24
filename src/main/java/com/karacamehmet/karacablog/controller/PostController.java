@@ -5,6 +5,7 @@ import com.karacamehmet.karacablog.dto.request.CreatePostRequest;
 import com.karacamehmet.karacablog.dto.request.UpdatePostRequest;
 import com.karacamehmet.karacablog.dto.response.*;
 import com.karacamehmet.karacablog.service.abstraction.PostService;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

@@ -1,10 +1,8 @@
 package com.karacamehmet.karacablog.core.exception;
 
-import com.karacamehmet.karacablog.core.exception.detail.BadCredentialsProblemDetails;
-import com.karacamehmet.karacablog.core.exception.detail.BusinessProblemDetails;
-import com.karacamehmet.karacablog.core.exception.detail.InternalAuthenticationProblemDetails;
-import com.karacamehmet.karacablog.core.exception.detail.ValidationProblemDetails;
+import com.karacamehmet.karacablog.core.exception.detail.*;
 import com.karacamehmet.karacablog.core.exception.type.BusinessException;
+import io.github.resilience4j.ratelimiter.RequestNotPermitted;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
@@ -57,6 +55,14 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public InternalAuthenticationProblemDetails handleInternalAuthenticationServiceException(InternalAuthenticationServiceException exception) {
         InternalAuthenticationProblemDetails problemDetails = new InternalAuthenticationProblemDetails();
+        problemDetails.setDetail(exception.getMessage());
+        return problemDetails;
+    }
+
+    @ExceptionHandler(RequestNotPermitted.class)
+    @ResponseStatus(HttpStatus.TOO_MANY_REQUESTS)
+    public RequestNotPermittedProblemDetails handleRequestNotPermitted(RequestNotPermitted exception){
+        RequestNotPermittedProblemDetails problemDetails= new RequestNotPermittedProblemDetails();
         problemDetails.setDetail(exception.getMessage());
         return problemDetails;
     }

@@ -12,6 +12,7 @@ import com.karacamehmet.karacablog.service.abstraction.UserService;
 import com.karacamehmet.karacablog.service.event.PostDeletedEvent;
 import com.karacamehmet.karacablog.service.mapper.PostMapper;
 import com.karacamehmet.karacablog.service.rules.PostBusinessRules;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;

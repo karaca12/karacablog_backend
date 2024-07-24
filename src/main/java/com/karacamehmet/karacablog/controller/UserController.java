@@ -8,6 +8,7 @@ import com.karacamehmet.karacablog.dto.response.GetUserResponse;
 import com.karacamehmet.karacablog.dto.response.SearchUserListResponse;
 import com.karacamehmet.karacablog.dto.response.UpdateUserResponse;
 import com.karacamehmet.karacablog.service.abstraction.UserService;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

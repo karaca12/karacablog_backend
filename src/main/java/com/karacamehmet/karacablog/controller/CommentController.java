@@ -8,6 +8,7 @@ import com.karacamehmet.karacablog.dto.response.GetAllCommentsOfPostListResponse
 import com.karacamehmet.karacablog.dto.response.GetCommentResponse;
 import com.karacamehmet.karacablog.dto.response.UpdateCommentResponse;
 import com.karacamehmet.karacablog.service.abstraction.CommentService;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
