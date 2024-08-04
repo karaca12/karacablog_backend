@@ -17,12 +17,12 @@ public class IpRateLimiterService {
 
 
     public RateLimiter rateLimiterCreator(String ipAddress) {
-        return rateLimiterCache.computeIfAbsent(ipAddress, this::createRateLimiter);
+        return rateLimiterCache.computeIfAbsent("Rate limiter of: "+ipAddress, this::createRateLimiter);
     }
 
     private RateLimiter createRateLimiter(String ipAddress) {
         RateLimiterConfig config = RateLimiterConfig.custom()
-                .limitForPeriod(10)
+                .limitForPeriod(120)
                 .limitRefreshPeriod(Duration.ofMinutes(1))
                 .timeoutDuration(Duration.ZERO)
                 .build();
